@@ -5,6 +5,7 @@ import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.pattern.ask
 import akka.stream.{Materializer, SystemMaterializer}
 import akka.util.Timeout
+import com.typesafe.config.ConfigFactory
 
 import scala.concurrent.duration._
 import scala.concurrent.Future
@@ -14,7 +15,7 @@ import spray.json._
 import scala.util.Success
 
 object MockService extends App with PaymentJsonProtocol {
-  implicit val paymentMockSystem: ActorSystem = ActorSystem("PaymentMockSystem")
+  implicit val paymentMockSystem: ActorSystem = ActorSystem("PaymentMockSystem", ConfigFactory.load().getConfig("mockServiceConfig"))
   implicit def matFromSystem(implicit provider: ClassicActorSystemProvider): Materializer =
     SystemMaterializer(provider.classicSystem).materializer
 
